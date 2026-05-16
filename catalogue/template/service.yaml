@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: catalogue
+  namespace: roboshop
+  labels:
+    project: roboshop
+    component: catalogue
+    environment: dev
+spec:
+  selector:
+    #by default the service type is ClusterIP. It exposes the service on a cluster-internal IP.
+    #label are used as a selectors to select the pods which are running nginx.
+    project: roboshop
+    component: catalogue
+    environment: dev
+  ports:
+  - protocol: TCP
+    port: 8080 # service port
+    targetPort: 8080 # container port

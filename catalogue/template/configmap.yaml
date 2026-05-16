@@ -1,0 +1,9 @@
+#Deploymen is a higher level abstraction that manages ReplicaSets and provides declarative updates to applications.
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: catalogue-config
+  namespace: roboshop
+data:
+  MONGO: "true"
+  MONGO_URL: "{{ .Values.configmap.MONGO_URL }}"

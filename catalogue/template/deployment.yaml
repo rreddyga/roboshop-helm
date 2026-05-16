@@ -1,0 +1,77 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: catalogue
+  namespace: roboshop
+  #these are required labels for replicaset to identify the pods it manages. 
+  #These labels should match the labels defined in the pod template.
+  labels:
+    project: roboshop
+    component: catalogue
+    environment: dev
+
+spec:
+  replicas: {{ .Values.deployment.replicas }} #number of pod replicas to be maintained
+  selector:
+    #using these labels the replicaset will identify the pods it manages.
+    matchLabels:
+      project: roboshop
+      component: catalogue
+      environment: dev
+  #This is the pod template which defines the pod specification. 
+  #The deployment will create pods based on this template.
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        component: catalogue
+        environment: dev
+    spec:
+      containers:
+      - name: catalogue
+        #image: rreddygang/catalogue:1.0.0
+        image: "{{ .Values.deployment.imageName }}: {{ .Values.deployment.imageVersion }}"
+        #imagepullpolicy is used to specify when to pull the image.
+        imagePullPolicy: Always
+        # Define resource limits and requests for the container
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+          requests:
+            memory: "128Mi"
+            cpu: "100m"
+        #readinessProbe is used to check if the application is ready to serve traffic. 
+        #It checks the TCP socket on port 8080. If the application is not ready, 
+        #it will not receive traffic from the service.
+        readinessProbe:
+          # Checks the TCP socket on port 8080 to determine if the application is ready to serve traffic.
+          tcpSocket:
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+          #initialDelaySeconds is the time to wait before starting the readiness probe.
+          initialDelaySeconds: 15
+        #livenessProbe is used to check if the application is alive.
+        livenessProbe:
+          httpGet:
+            path: /health
+            port: 8080
+          failureThreshold: 2
+          periodSeconds: 10
+        envFrom:
+        - configMapRef:
+            name: catalogue-config # configmap name referenced in the 1st line of this file
+
+#kubens installation is required to switch between namespaces.
+#after installing kubens, run the command kubens roboshop to switch to the roboshop namespace.
+# run this command-> kubens roboshop
+#if you want to switch to default namespace, run the command-> kubens default
+
+#install k9s to monitor the resources in the namespace. 
+#It is a terminal based UI to manage Kubernetes clusters. 
+#It provides a graphical interface to view and manage the resources in the cluster. 
+#It also provides a way to view the logs of the pods and execute commands in the pods.
+#curl -sS https://webinstall.dev/k9s | bash
+# run k9s command to view the resources in the cluster.
+#shift + : to view the namespaces and switch between namespaces.
