@@ -30,7 +30,7 @@ spec:
       containers:
       - name: catalogue
         #image: rreddygang/catalogue:1.0.0
-        image: "{{ .Values.deployment.imageName }}: {{ .Values.deployment.imageVersion }}"
+        image: "{{ .Values.deployment.imageName }}:{{ .Values.deployment.imageVersion }}"
         #imagepullpolicy is used to specify when to pull the image.
         imagePullPolicy: Always
         # Define resource limits and requests for the container

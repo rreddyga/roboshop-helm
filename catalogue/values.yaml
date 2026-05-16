@@ -1,2 +1,7 @@
+deployment:
+  replicas: "3"
+  imageName: "rreddygang/catalogue"
+  imageVersion: "1.0.0"
+
 configmap:
   MONGO_URL: "mongodb://mongodb:27017/catalogue"
