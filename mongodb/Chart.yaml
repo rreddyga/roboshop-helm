@@ -1,0 +1,4 @@
+apiVersion: v2 #kubernetes version
+name: mongodb
+version: 0.0.1  # this is chart version
+appVersion: 1.1.0 #This is application version like catalogue

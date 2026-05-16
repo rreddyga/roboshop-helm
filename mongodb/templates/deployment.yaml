@@ -1,0 +1,36 @@
+#Deploymen is a higher level abstraction that manages ReplicaSets and provides declarative updates to applications.
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mongodb
+  namespace: roboshop
+  #these are required labels for replicaset to identify the pods it manages. 
+  #These labels should match the labels defined in the pod template.
+  labels:
+    project: roboshop
+    component: mongodb
+    environment: dev
+
+spec:
+  replicas: {{ .Values.deployment.replicas }} #number of pod replicas to be maintained
+  selector:
+    #using these labels the replicaset will identify the pods it manages.
+    matchLabels:
+      project: roboshop
+      component: mongodb
+      environment: dev
+  #This is the pod template which defines the pod specification. 
+  #The deployment will create pods based on this template.
+  template:
+    metadata:
+      labels:
+        project: roboshop
+        component: mongodb
+        environment: dev
+    spec:
+      containers:
+      - name: mongodb
+        #image: rreddygang/mongodb:1.0.0
+        image: "{{ .Values.deployment.imageName}}:{{ .Values.deployment.imageVersion}}"
+

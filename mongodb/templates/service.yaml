@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mongodb
+  namespace: roboshop
+  labels:
+    project: roboshop
+    component: mongodb
+    environment: dev
+spec:
+  selector:
+    #by default the service type is ClusterIP. It exposes the service on a cluster-internal IP.
+    #label are used as a selectors to select the pods which are running nginx.
+    project: roboshop
+    component: mongodb
+    environment: dev
+  ports:
+  - protocol: TCP
+    port: 27017 # service port
+    targetPort: 27017 # container port
